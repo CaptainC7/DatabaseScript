@@ -1,0 +1,171 @@
+Create table Person
+(
+	ID int primary key identity (1,1),
+	FName nvarchar (50),
+	LName nvarchar (50),
+	Gender char (1),
+	BDate date,
+	Username nvarchar (100),
+	Password nvarchar (100)
+)
+
+insert into Person (FName, LName, Gender, BDate, Username, Password)
+values ('Taha', 'Mardini', 'M', '1990-01-23', 'tahamardini', 'taha123')
+
+create table TaskListTemplate
+(
+	ID int primary key identity (1,1),
+	TempName nvarchar (50),
+	CreatedBy int,
+	CreatedDate date
+)
+
+insert into TaskListTemplate (TempName, CreatedBy, CreatedDate)
+values ('Accounting', 1, GETDATE())
+
+create table TaskGroup
+(
+	ID int primary key identity (1,1),
+	GroupName nvarchar (50),
+	TaskListTemplateID int,
+	GroupOrder int
+)
+
+insert into TaskGroup (GroupName, TaskListTemplateID, GroupOrder)
+values ('Invoicing', 1, 1)
+
+create table Task
+(
+	ID int primary key identity (1,1),
+	TaskName nvarchar (100),
+	Description text,
+	TaskGroupID int,
+	TaskOrder int,
+	DependancyTaskID int
+)
+
+insert into Task (TaskName, Description, TaskGroupID, TaskOrder, DependancyTaskID)
+values ('Payables', 'Check that all invoices of current month that has passed due date are payed to vendors successfully', 1, 1, null)
+
+Create table TaskListInstance
+(
+	ID int primary key identity (1,1),
+	TaskListTemplateID int,
+	StartDate datetime,
+	AssignedTo int,
+	Status nvarchar (50) 
+)
+
+insert into TaskListInstance (TaskListTemplateID, StartDate, AssignedTo, Status)
+values (1, GETDATE(), 1, 'Pending')
+
+Create table TaskGroupInstance
+(
+	ID int primary key identity (1,1),
+	TaskGroupID int,
+	TaskListInstanceID int,
+	AssignedTo int,
+	Status nvarchar (50)
+)
+
+insert into TaskGroupInstance (TaskGroupID, TaskListInstanceID, AssignedTo, Status)
+values (1, 1, 1, 'Pending')
+
+create table TaskInstance
+(
+	ID int primary key identity (1,1),
+	TaskID int,
+	TaskGroupInstanceID int,
+	AssignedTo int,
+	Status nvarchar (50),
+	TaskCompletionDate datetime
+)
+
+insert into TaskInstance (TaskID, TaskGroupInstanceID, Status, TaskCompletionDate)
+values (1, 1, 'Pending', DATEADD(d, 5, GETDATE()))
+
+create table TaskAssignment
+(
+	ID int primary key identity (1,1),
+	PersonID int,
+	TaskInstanceID int,
+	AssignedDate datetime
+)
+
+insert into TaskAssignment (PersonID, TaskInstanceID, AssignedDate)
+values (1, 1, GETDATE())
+
+create table Role
+(
+	ID int primary key identity (1,1),
+	RoleName nvarchar (100)
+)
+
+insert into Role (RoleName)
+values ('Admin'), ('Moderator'), ('User') 
+
+create table TaskAttachment
+(
+	ID int Primary key identity (1,1),
+	TaskInstanceID int,
+	FilePath nvarchar (MAX),
+	UploadedBy int,
+	UploadedDate datetime
+)
+
+create table AuditTracking
+(
+	ID int primary key identity (1,1),
+	EntityType nvarchar (100),
+	EntityID int,
+	ModifiedBy int,
+	ModifiedType nvarchar (100),
+	ModifiedDate datetime
+)
+
+create table TaskListInstancePerson
+
+(
+	ID int primary key identity (1,1),
+	TaskListInstanceID int,
+	PersonID int
+)
+
+insert into TaskListInstancePerson(TaskListInstanceID, PersonID)
+values (1, 1)
+
+create table TaskGroupInstancePerson
+(
+	ID int primary key identity (1,1),
+	TaskGroupInstanceID int,
+	PersonID int
+)
+
+insert into TaskGroupInstancePerson (TaskGroupInstanceID, PersonID)
+values (1, 1)
+
+create table TaskListInstancePersonRole
+(
+	ID int primary key identity (1,1),
+	TaskListInstanceID int,
+	PersonID int,
+	RoleID int
+)
+
+insert into TaskListInstancePersonRole (TaskListInstanceID, PersonID, RoleID)
+values (1, 1, 1)
+
+select * from person
+select * from TaskListTemplate
+select * from TaskGroup
+select * from Task
+select * from TaskListInstance
+select * from TaskGroupInstance
+select * from TaskInstance
+select * from TaskAssignment
+select * from Role
+select * from TaskAttachment
+select * from AuditTracking
+select * from TaskListInstancePerson
+select * from TaskGroupInstancePerson
+select * from TaskListInstancePersonRole
